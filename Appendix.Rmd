@@ -1,0 +1,845 @@
+---
+title: "Irene Hsueh's Research Contribution"
+author: "Irene Hsueh"
+date: ''
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+# 2018 Dataset
+```{r}
+load("C:/Irene Hsueh's Documents/MS Applied Biostatistics/More Research/2018 NSDUH Release/NSDUH_2018.RData")
+
+crimes2018 <- PUF2018_100819 %>% 
+#Selecting Variables for Analysis
+  dplyr::select(medmj_law = MEDMJPA2, 
+                illegal_crimes = snysell, 
+                steal = snystole, 
+                attack = snyattak, 
+                age = CATAG6, 
+                sex = irsex, 
+                race = NEWRACE2, 
+                marital_status = irmarit, 
+                education = IREDUHIGHST2, 
+                cigarettes = cigever, 
+                alcohol = alcever, 
+                mj_use = mjever,
+                cluster = verep, 
+                strata = vestr, 
+                weights = ANALWT_C) %>%
+#Selecting Participants 18 or Older
+  filter(age>=2) %>%
+#Converting Missing Data to NA
+  naniar::replace_with_na_all(condition= ~.x %in% c(85, 94, 97, 98, 99)) %>% 
+#Excluding Observations with NA
+  na.omit() %>% 
+#Adding Year Variable & Recoding Variables  
+  mutate(year=2018, 
+         illegal_crimes = recode_factor(illegal_crimes, 
+                                       "1"="No", 
+                                       "2"="Yes",
+                                       "3"="Yes", 
+                                       "4"="Yes",
+                                       "5"="Yes"),
+         steal = recode_factor(steal,
+                               "1"="No", 
+                               "2"="Yes",
+                               "3"="Yes", 
+                               "4"="Yes",
+                               "5"="Yes"),
+         attack = recode_factor(attack,
+                                "1"="No",
+                                "2"="Yes",
+                                "3"="Yes", 
+                                "4"="Yes",
+                                "5"="Yes"),
+         age = recode_factor(age, 
+                             "2"="18-25 years", 
+                             "3"="26-34 years", 
+                             "4"="35-49 years", 
+                             "5"="50-64 years", 
+                             "6"=">65 years"), 
+         sex = recode_factor(sex, "1"="Male", "2"="Female"),
+         race = recode_factor(race, 
+                              "1"="White", 
+                              "2"="Black", 
+                              "7"="Hispanic", 
+                              "3"="Other", 
+                              "4"="Other", 
+                              "5"="Other", 
+                              "6"="Other"), 
+         marital_status = recode_factor(marital_status, 
+                                        "1"="Married", 
+                                        "2"="Widowed", 
+                                        "3"="Divorced/Separated", 
+                                        "4"="Never Married"), 
+         education = recode_factor(education, 
+                                   "1"="High School Not Completed", 
+                                   "2"="High School Not Completed", 
+                                   "3"="High School Not Completed", 
+                                   "4"="High School Not Completed", 
+                                   "5"="High School Not Completed", 
+                                   "6"="High School Not Completed", 
+                                   "7"="High School Not Completed", 
+                                   "8"="High School Diploma", 
+                                   "9"="Some College", 
+                                   "10"="Associate Degree", 
+                                   "11"="College Graduate")
+         ) %>%
+#Reassign Values to Binary Variables
+  mutate_at(c("medmj_law", "cigarettes", "alcohol", "mj_use"), 
+            list(~dplyr::recode(., "2"="No", .default="Yes"))) %>%
+#Factoring Variables
+mutate(across(.cols=-weights, .fns=as.factor)) %>%
+#Labeling Variables
+  apply_labels(illegal_crimes = "Sold Illegal crimes", 
+               steal = "Stolen/Tried to Steal Anything Worth >$50", 
+               attack = "Attacked Someone With Intent to Seriously Hurt Them",
+               medmj_law = "State Medical MJ Law Passed", 
+               age = "Age Category", 
+               sex = "Sex", 
+               race = "Race", 
+               marital_status = "Marital Status", 
+               education = "Education", 
+               cigarettes = "Ever Smoked a Cigarette", 
+               alcohol = "Ever Had a Drink of Alcohol", 
+               mj_use = "Ever Used Marijuana",
+               year = "Year of Interview", 
+               cluster = "Primary Sampling Unit", 
+               strata = "Strata", 
+               weights = "Person-Level Weights")
+```
+
+
+
+# 2019 Dataset
+```{r}
+load("C:/Irene Hsueh's Documents/MS Applied Biostatistics/More Research/2019 NSDUH Release/NSDUH_2019.RData")
+
+crimes2019 <- PUF2019_100920 %>% 
+#Selecting Variables for Analysis
+  dplyr::select(medmj_law = MEDMJPA2,
+                illegal_crimes = snysell, 
+                steal = snystole, 
+                attack = snyattak, 
+                age = CATAG6, 
+                sex = irsex, 
+                race = NEWRACE2, 
+                marital_status = irmarit, 
+                education = IREDUHIGHST2, 
+                cigarettes = cigever, 
+                alcohol = alcever, 
+                mj_use = mjever,
+                cluster = verep, 
+                strata = vestr, 
+                weights = ANALWT_C) %>%
+#Selecting Participants 18 or Older
+  filter(age>=2) %>%
+#Converting Missing Data to NA
+  naniar::replace_with_na_all(condition= ~.x %in% c(85, 94, 97, 98, 99)) %>% 
+#Excluding Observations with NA
+  na.omit() %>% 
+#Adding Year Variable & Recoding Variables  
+  mutate(year=2019, 
+         illegal_crimes = recode_factor(illegal_crimes, 
+                                       "1"="No", 
+                                       "2"="Yes",
+                                       "3"="Yes", 
+                                       "4"="Yes",
+                                       "5"="Yes"),
+         steal = recode_factor(steal,
+                               "1"="No", 
+                               "2"="Yes",
+                               "3"="Yes", 
+                               "4"="Yes",
+                               "5"="Yes"),
+         attack = recode_factor(attack,
+                                "1"="No",
+                                "2"="Yes",
+                                "3"="Yes", 
+                                "4"="Yes",
+                                "5"="Yes"),
+         age = recode_factor(age, 
+                             "2"="18-25 years", 
+                             "3"="26-34 years", 
+                             "4"="35-49 years", 
+                             "5"="50-64 years", 
+                             "6"=">65 years"),
+         sex = recode_factor(sex, "1"="Male", "2"="Female"),
+         race = recode_factor(race, 
+                              "1"="White", 
+                              "2"="Black", 
+                              "7"="Hispanic", 
+                              "3"="Other", 
+                              "4"="Other", 
+                              "5"="Other", 
+                              "6"="Other"), 
+         marital_status = recode_factor(marital_status, 
+                                        "1"="Married", 
+                                        "2"="Widowed", 
+                                        "3"="Divorced/Separated", 
+                                        "4"="Never Married"), 
+         education = recode_factor(education, 
+                                   "1"="High School Not Completed", 
+                                   "2"="High School Not Completed", 
+                                   "3"="High School Not Completed", 
+                                   "4"="High School Not Completed", 
+                                   "5"="High School Not Completed", 
+                                   "6"="High School Not Completed", 
+                                   "7"="High School Not Completed", 
+                                   "8"="High School Diploma", 
+                                   "9"="Some College", 
+                                   "10"="Associate Degree", 
+                                   "11"="College Graduate")
+         ) %>%
+#Reassign Values to Binary Variables
+  mutate_at(c("medmj_law", "cigarettes", "alcohol", "mj_use"), 
+            list(~dplyr::recode(., "2"="No", .default="Yes"))) %>%
+#Factoring Variables
+  mutate(across(.cols=-weights, .fns=as.factor)) %>%
+#Labeling Variables
+  apply_labels(illegal_crimes = "Sold Illegal crimes", 
+               steal = "Stolen/Tried to Steal Anything Worth >$50", 
+               attack = "Attacked Someone With Intent to Seriously Hurt Them",
+               medmj_law = "State Medical MJ Law Passed", 
+               age = "Age Category", 
+               sex = "Sex", 
+               race = "Race", 
+               marital_status = "Marital Status", 
+               education = "Education", 
+               cigarettes = "Ever Smoked a Cigarette", 
+               alcohol = "Ever Had a Drink of Alcohol", 
+               mj_use = "Ever Used Marijuana",
+               year = "Year of Interview",
+               cluster = "Primary Sampling Unit", 
+               strata = "Strata", 
+               weights = "Person-Level Weights")
+```
+
+
+
+### Merged Dataset
+```{r}
+#Merging Datasets
+crimes <- rbind(crimes2018, crimes2019) %>%
+#Reordering Variables
+  select(-"cluster", -"strata", -"weights", everything()) %>%
+#Labeling Variables
+  apply_labels(medmj_law = "State Medical MJ Law Passed", 
+               illegal_crimes = "Sold Illegal crimes", 
+               steal = "Stolen/Tried to Steal Anything Worth >$50", 
+               attack = "Attacked Someone With Intent to Seriously Hurt Them",
+               age = "Age Category", 
+               sex = "Sex", 
+               race = "Race", 
+               marital_status = "Marital Status", 
+               education = "Education", 
+               cigarettes = "Ever Smoked a Cigarette", 
+               alcohol = "Ever Had a Drink of Alcohol", 
+               mj_use = "Ever Used Marijuana",
+               year = "Year of Interview", 
+               cluster = "Primary Sampling Unit", 
+               strata = "Strata", 
+               weights = "Person-Level Weights")
+
+
+#Descriptive Statistics
+table_html <- table1(~illegal_crimes + steal + attack + age + sex + race +  marital_status + education + cigarettes + alcohol + mj_use + year | medmj_law, data=crimes, overall="Total", rowlabelhead="State Medical MJ Law Passed", caption="Merged 2018 & 2019 Dataset")
+
+nomedmjlaw_table <- lapply(crimes[crimes$medmj_law=="No",-c(1, 14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+medmjlaw_table <- lapply(crimes[crimes$medmj_law=="Yes",-c(1, 14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+overall_table <- lapply(crimes[,-c(1, 14:16)], function(x) round(prop.table(table(x))*100, 2))
+
+
+#Chi-Squared Tests
+chisq <- lapply(crimes[,-c(1, 14:16)], function(x) chisq.test(table(x, crimes$medmj_law)))
+pvaules <- lapply(crimes[,-c(1, 14:16)], 
+       function(x) chisq.test(table(x, crimes$medmj_law))$p.value)
+```
+
+
+
+### Merged Dataset Logistic Regression
+```{r}
+#Sold Illegal crimes
+illegaldrug <- glm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes, family="binomial")
+
+summary(illegaldrug)
+round(exp(cbind(OR = coef(illegaldrug), confint(illegaldrug))),4)
+
+
+
+#Stolen/Tried to Steal Anything Worth >$50
+steal <- glm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes, family="binomial")
+
+summary(steal)
+round(exp(cbind(OR = coef(steal), confint(steal))),4)
+
+
+#Attacked Someone With Intent to Seriously Hurt Them
+attack <- glm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes, family="binomial")
+
+summary(attack)
+round(exp(cbind(OR = coef(attack), confint(attack))),4)
+```
+
+
+
+### Checking Interaction in Merged Dataset
+```{r}
+#Sold Illegal crimes
+illegaldrug_age <- glm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:age, data=crimes, family="binomial")
+summary(illegaldrug_age)
+
+illegaldrug_sex <- glm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:sex, data=crimes, family="binomial")
+summary(illegaldrug_sex)
+
+illegaldrug_race <- glm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:race, data=crimes, family="binomial")
+summary(illegaldrug_race)
+
+illegaldrug_education <- glm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:education, data=crimes, family="binomial")
+summary(illegaldrug_education)
+
+illegaldrug_mjuse <- glm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:mj_use, data=crimes, family="binomial")
+summary(illegaldrug_mjuse)
+
+
+
+#Stolen/Tried to Steal Anything Worth >$50
+steal_age <- glm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:age, data=crimes, family="binomial")
+summary(steal_age)
+
+steal_sex <- glm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:sex, data=crimes, family="binomial")
+summary(steal_sex)
+
+steal_race <- glm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:race, data=crimes, family="binomial")
+summary(steal_race)
+
+steal_education <- glm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:education, data=crimes, family="binomial")
+summary(steal_education)
+
+steal_mjuse <- glm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:mj_use, data=crimes, family="binomial")
+summary(steal_mjuse)
+
+
+
+#Attacked Someone With Intent to Seriously Hurt Them
+attack_age <- glm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:age, data=crimes, family="binomial")
+summary(attack_age)
+
+attack_sex <- glm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:sex, data=crimes, family="binomial")
+summary(attack_sex)
+
+attack_race <- glm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:race, data=crimes, family="binomial")
+summary(attack_race)
+
+attack_education <- glm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:education, data=crimes, family="binomial")
+summary(attack_education)
+
+attack_mjuse <- glm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + medmj_law:mj_use, data=crimes, family="binomial")
+summary(attack_mjuse)
+```
+
+
+
+### Stratifiying Merged Dataset
+```{r}
+#Race-Stratified Datasets
+crimes_white <- crimes[crimes$race=="White",]
+crimes_black <- crimes[crimes$race=="Black",]
+crimes_hispanic <- crimes[crimes$race=="Hispanic",] 
+crimes_other <- crimes[crimes$race=="Other",]
+
+
+
+#Race:White Descriptive Statistics
+white_html <- table1(~illegal_crimes + steal + attack + age + sex +  marital_status + education + cigarettes + alcohol + mj_use + year | medmj_law, data=crimes_white, overall="Total", rowlabelhead="State Medical MJ Law Passed", caption="Race: White")
+
+nonmedmjlaw_white_table <- lapply(crimes_white[crimes_white$medmj_law=="No",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+medmjlaw_white_table <- lapply(crimes_white[crimes_white$medmj_law=="Yes",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+overall_white_table <- lapply(crimes_white[,-c(7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+
+chisq_white <- lapply(crimes_white[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_white$medmj_law)))
+pvalues_white <- lapply(crimes_white[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_white$medmj_law))$p.value)
+
+
+
+#Race:Black Descriptive Statistics
+table_black <- table1(~illegal_crimes + steal + attack + age + sex +  marital_status + education + cigarettes + alcohol + mj_use + year | medmj_law, data=crimes_black, overall="Total", rowlabelhead="State Medical MJ Law Passed", caption="Race: Black")
+
+nonmedmjlaw_black_table <- lapply(crimes_black[crimes_black$medmj_law=="No",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+medmjlaw_black_table <- lapply(crimes_black[crimes_black$medmj_law=="Yes",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+overall_black_table <- lapply(crimes_black[,-c(7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+
+chisq_black <- lapply(crimes_black[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_black$medmj_law)))
+pvalues_black <- lapply(crimes_black[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_black$medmj_law))$p.value)
+
+
+
+#Race:Hispanic Descriptive Statistics
+table_hispanic <- table1(~illegal_crimes + steal + attack + age + sex +  marital_status + education + cigarettes + alcohol + mj_use + year | medmj_law, data=crimes_hispanic, overall="Total", rowlabelhead="State Medical MJ Law Passed", caption="Race: Hispanic")
+
+nonmedmjlaw_hispanic_table <- lapply(crimes_hispanic[crimes_hispanic$medmj_law=="No",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+medmjlaw_hispanic_table <- lapply(crimes_hispanic[crimes_hispanic$medmj_law=="Yes",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+overall_hispanic_table <- lapply(crimes_hispanic[,-c(7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+
+chisq_hispanic <- lapply(crimes_hispanic[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_hispanic$medmj_law)))
+pvalues_hispanic <- lapply(crimes_hispanic[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_hispanic$medmj_law))$p.value)
+
+
+
+#Race:Other Descriptive Statistics
+table_other <- table1(~illegal_crimes + steal + attack + age + sex +  marital_status + education + cigarettes + alcohol + mj_use + year | medmj_law, data=crimes_other, overall="Total", rowlabelhead="State Medical MJ Law Passed", caption="Race: Other")
+
+nonmedmjlaw_other_table <- lapply(crimes_other[crimes_other$medmj_law=="No",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+medmjlaw_other_table <- lapply(crimes_other[crimes_other$medmj_law=="Yes",-c(1,7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+overall_other_table <- lapply(crimes_other[,-c(7,14:16)], 
+       function(x) round(prop.table(table(x))*100, 2))
+
+chisq_other <- lapply(crimes_other[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_other$medmj_law)))
+pvalues_other <- lapply(crimes_other[,-c(1,7,14:16)], 
+       function(x) chisq.test(table(x,crimes_other$medmj_law))$p.value)
+```
+
+
+
+### Race-Stratified Analysis
+```{r}
+#Race:White Logistic Regressions
+illegaldrug_white <- glm(illegal_crimes ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_white, family="binomial")
+summary(illegaldrug_white)
+round(exp(cbind(OR = coef(illegaldrug_white), confint(illegaldrug_white))),4)
+
+steal_white <- glm(steal ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_white, family="binomial")
+summary(steal_white)
+round(exp(cbind(OR = coef(steal_white), confint(steal_white))),4)
+
+attack_white <- glm(attack ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_white, family="binomial")
+summary(attack_white)
+round(exp(cbind(OR = coef(attack_white), confint(attack_white))),4)
+
+
+
+#Race:Black Logistic Regressions
+illegaldrug_black <- glm(illegal_crimes ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_black, family="binomial")
+summary(illegaldrug_black)
+round(exp(cbind(OR = coef(illegaldrug_black), confint(illegaldrug_black))),4)
+
+steal_black <- glm(steal ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_black, family="binomial")
+summary(steal_black)
+round(exp(cbind(OR = coef(steal_black), confint(steal_black))),4)
+
+attack_black <- glm(attack ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_black, family="binomial")
+summary(attack_black)
+round(exp(cbind(OR = coef(attack_black), confint(attack_black))),4)
+
+
+
+#Race:Hispanic Logistic Regressions
+illegaldrug_hispanic <- glm(illegal_crimes ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_hispanic, family="binomial")
+summary(illegaldrug_hispanic)
+round(exp(cbind(OR = coef(illegaldrug_hispanic), confint(illegaldrug_hispanic))),4)
+
+steal_hispanic <- glm(steal ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_hispanic, family="binomial")
+summary(steal_hispanic)
+round(exp(cbind(OR = coef(steal_hispanic), confint(steal_hispanic))),4)
+
+attack_hispanic <- glm(attack ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_hispanic, family="binomial")
+summary(attack_hispanic)
+round(exp(cbind(OR = coef(attack_hispanic), confint(attack_hispanic))),4)
+
+
+
+#Race:Other Logistic Regressions
+illegaldrug_other <- glm(illegal_crimes ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_other, family="binomial")
+summary(illegaldrug_other)
+round(exp(cbind(OR = coef(illegaldrug_other), confint(illegaldrug_other))),4)
+
+steal_other <- glm(steal ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_other, family="binomial")
+summary(steal_other)
+round(exp(cbind(OR = coef(steal_other), confint(steal_other))),4)
+
+attack_other <- glm(attack ~ medmj_law + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, data=crimes_other, family="binomial")
+summary(attack_other)
+round(exp(cbind(OR = coef(attack_other), confint(attack_other))),4)
+```
+
+
+
+### Weighted Dataset 
+```{r}
+crimes_weighted <- svydesign(id = ~cluster, 
+                            strata = ~strata, 
+                            weights = ~weights,
+                            data = crimes,
+                            nest = TRUE)
+crimes_nomedmj_weighted <- subset(crimes_weighted, medmj_law=="No")
+crimes_medmj_weighted <- subset(crimes_weighted, medmj_law=="Yes")
+
+
+#Descriptive Statistics
+overall_table_weighted <- lapply(names(crimes[,-c(14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_weighted))
+
+overall_prop_weighted <- lapply(names(crimes[,-c(14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_weighted))*100, 2))
+
+
+#nomedmjlaw_table 
+nomedmj_table_weighted <- lapply(names(crimes[-c(1, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_nomedmj_weighted))
+
+nomedmj_prop_weighted <- lapply(names(crimes[,-c(1, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_nomedmj_weighted))*100, 2))
+
+
+#medmjlaw_table 
+medmj_table_weighted <- lapply(names(crimes[-c(1, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_medmj_weighted))
+
+medmj_prop_weighted <- lapply(names(crimes[,-c(1, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_medmj_weighted))*100, 2))
+
+
+#Chi-Squared Tests
+chisq_weighted <- lapply(names(crimes[-c(1, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_weighted))
+pvalues_weighted <- lapply(names(crimes[-c(1, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_weighted)$p.value)
+```
+
+
+
+### Weighted Dataset Logistic Regression
+```{r}
+#Sold Illegal Drugs
+illegaldrug_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_weighted, family="binomial")
+
+summary(illegaldrug_weighted)
+round(exp(cbind(OR = coef(illegaldrug_weighted), confint(illegaldrug_weighted))),4)
+
+
+
+#Stolen/Tried to Steal Anything Worth >$50
+steal_weighted <- svyglm(medmj_law ~ steal + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_weighted, family="binomial")
+
+summary(steal_weighted)
+round(exp(cbind(OR = coef(steal_weighted), confint(steal_weighted))),4) 
+
+
+
+#Important That Friends Share Religious Beliefs 
+attack_weighted <- svyglm(medmj_law ~ attack + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_weighted, family="binomial")
+
+summary(attack_weighted)
+round(exp(cbind(OR = coef(attack_weighted), confint(attack_weighted))),4)
+```
+
+
+
+### Checking Interaction in Weighted Dataset
+```{r}
+#Sold Illegal Drugs
+illegaldrug_sex_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + illegal_crimes:sex, design=crimes_weighted, family="binomial")
+summary(illegaldrug_sex_weighted)
+
+illegaldrug_race_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + illegal_crimes:race, design=crimes_weighted, family="binomial")
+summary(illegaldrug_race_weighted)
+
+
+
+#Stolen/Tried to Steal Anything Worth >$50
+steal_sex_weighted <- svyglm(medmj_law ~ steal + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + illegal_crimes:sex, design=crimes_weighted, family="binomial")
+summary(steal_sex_weighted)
+
+attack_sex_weighted <- svyglm(medmj_law ~ attack + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + illegal_crimes:sex, design=crimes_weighted, family="binomial")
+summary(attack_sex_weighted)
+
+
+
+#Stolen/Tried to Steal Anything Worth >$50
+steal_race_weighted <- svyglm(medmj_law ~ steal + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + steal:race, design=crimes_weighted, family="binomial")
+summary(steal_race_weighted)
+
+attack_race_weighted <- svyglm(medmj_law ~ attack + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + year + attack:race, design=crimes_weighted, family="binomial")
+summary(attack_race_weighted)
+```
+
+
+
+### Stratifying Weighted Dataset by Sex
+```{r}
+#Race-Stratified Datasets
+crimes_female_weighted <- subset(crimes_weighted, sex=="Female")
+crimes_male_weighted <- subset(crimes_weighted, sex=="Male")
+
+
+#Female Descriptive Statistics
+female_table_weighted <- lapply(names(crimes[,-c(5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_female_weighted))
+female_prop_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_female_weighted))*100, 2))
+
+nomedmj_female_table_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="No")))
+nomedmj_female_prop_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="No")))*100, 2))
+
+medmj_female_table_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="Yes")))
+medmj_female_prop_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_female_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_female_weighted))
+pvalues_female_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_female_weighted)$p.value)
+
+
+
+#Male Descriptive Statistics
+male_table_weighted <- lapply(names(crimes[,-c(5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_male_weighted))
+male_prop_weighted <- lapply(names(crimes[,-c(5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_male_weighted))*100, 2))
+
+nomedmj_male_table_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="No")))
+nomedmj_male_prop_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="No")))*100, 2))
+
+medmj_male_table_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="Yes")))
+medmj_male_prop_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_male_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_male_weighted))
+pvalues_male_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_male_weighted)$p.value)
+```
+
+
+
+### Sex-Stratified Weighted Analysis
+```{r}
+#Female Logistic Regressions
+illegaldrug_female_weighted <- svyglm(medmj_law ~ illegal_crimes + age + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_female_weighted, family="binomial")
+summary(illegaldrug_female_weighted)
+round(exp(cbind(OR = coef(illegaldrug_female_weighted), confint(illegaldrug_female_weighted))),4)
+
+steal_female_weighted <- svyglm(medmj_law ~ steal + age + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_female_weighted, family="binomial")
+summary(steal_female_weighted)
+round(exp(cbind(OR = coef(steal_female_weighted), confint(steal_female_weighted))),4) 
+
+attack_female_weighted <- svyglm(medmj_law ~ attack + age + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_female_weighted, family="binomial")
+summary(attack_female_weighted)
+round(exp(cbind(OR = coef(attack_female_weighted), confint(attack_female_weighted))),4)
+
+
+
+#Male Logistic Regressions
+illegaldrug_male_weighted <- svyglm(medmj_law ~ illegal_crimes + age + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_male_weighted, family="binomial")
+summary(illegaldrug_male_weighted)
+round(exp(cbind(OR = coef(illegaldrug_male_weighted), confint(illegaldrug_male_weighted))),4)
+
+steal_male_weighted <- svyglm(medmj_law ~ steal + age + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_male_weighted, family="binomial")
+summary(steal_male_weighted)
+round(exp(cbind(OR = coef(steal_male_weighted), confint(steal_male_weighted))),4)
+
+attack_male_weighted <- svyglm(medmj_law ~ attack + age + race + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_male_weighted, family="binomial")
+summary(attack_male_weighted)
+round(exp(cbind(OR = coef(attack_male_weighted), confint(attack_male_weighted))),4)
+```
+
+
+
+### Stratifying Weighted Dataset by Race
+```{r}
+#Race-Stratified Datasets
+crimes_white_weighted <- subset(crimes_weighted, race=="White")
+crimes_black_weighted <- subset(crimes_weighted, race=="Black")
+crimes_hispanic_weighted <- subset(crimes_weighted, race=="Hispanic")
+crimes_other_weighted <- subset(crimes_weighted, race=="Other")
+
+
+#Race:White Descriptive Statistics
+white_table_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_white_weighted))
+white_prop_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_white_weighted))*100, 2))
+
+nomedmj_white_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_white_weighted, medmj_law=="No")))
+nomedmj_white_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_white_weighted, medmj_law=="No")))*100, 2))
+
+medmj_white_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_white_weighted, medmj_law=="Yes")))
+medmj_white_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_white_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_white_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_white_weighted))
+pvalues_white_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_white_weighted)$p.value)
+
+
+
+#Race:Black Descriptive Statistics
+black_table_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_black_weighted))
+black_prop_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_black_weighted))*100, 2))
+
+nomedmj_black_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_black_weighted, medmj_law=="No")))
+nomedmj_black_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_black_weighted, medmj_law=="No")))*100, 2))
+
+medmj_black_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_black_weighted, medmj_law=="Yes")))
+medmj_black_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_black_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_black_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_black_weighted))
+pvalues_black_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_black_weighted)$p.value)
+
+
+
+#Race:Hispanic Descriptive Statistics
+hispanic_table_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_hispanic_weighted))
+hispanic_prop_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_hispanic_weighted))*100, 2))
+
+nomedmj_hispanic_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_hispanic_weighted, medmj_law=="No")))
+nomedmj_hispanic_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_hispanic_weighted, medmj_law=="No")))*100, 2))
+
+medmj_hispanic_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_hispanic_weighted, medmj_law=="Yes")))
+medmj_hispanic_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_hispanic_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_hispanic_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_hispanic_weighted))
+pvalues_hispanic_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_hispanic_weighted)$p.value)
+
+
+
+#Race:Other Descriptive Statistics
+other_table_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_other_weighted))
+other_prop_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_other_weighted))*100, 2))
+
+nomedmj_other_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_other_weighted, medmj_law=="No")))
+nomedmj_other_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_other_weighted, medmj_law=="No")))*100, 2))
+
+medmj_other_table_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_other_weighted, medmj_law=="Yes")))
+medmj_other_prop_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_other_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_other_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_other_weighted))
+pvalues_other_weighted <- lapply(names(crimes[-c(1, 7, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_other_weighted)$p.value)
+```
+
+
+
+### Race-Stratified Weighted Analysis
+```{r}
+#Race:White Logistic Regressions
+illegaldrug_white_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_white_weighted, family="binomial")
+summary(illegaldrug_white_weighted)
+round(exp(cbind(OR = coef(illegaldrug_white_weighted), confint(illegaldrug_white_weighted))),4)
+
+steal_white_weighted <- svyglm(medmj_law ~ steal + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_white_weighted, family="binomial")
+summary(steal_white_weighted)
+round(exp(cbind(OR = coef(steal_white_weighted), confint(steal_white_weighted))),4) 
+
+attack_white_weighted <- svyglm(medmj_law ~ attack + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_white_weighted, family="binomial")
+summary(attack_white_weighted)
+round(exp(cbind(OR = coef(attack_white_weighted), confint(attack_white_weighted))),4)
+
+
+
+#Race:Black Logistic Regressions
+illegaldrug_black_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_black_weighted, family="binomial")
+summary(illegaldrug_black_weighted)
+round(exp(cbind(OR = coef(illegaldrug_black_weighted), confint(illegaldrug_black_weighted))),4)
+
+steal_black_weighted <- svyglm(medmj_law ~ steal + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_black_weighted, family="binomial")
+summary(steal_black_weighted)
+round(exp(cbind(OR = coef(steal_black_weighted), confint(steal_black_weighted))),4)
+
+attack_black_weighted <- svyglm(medmj_law ~ attack + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_black_weighted, family="binomial")
+summary(attack_black_weighted)
+round(exp(cbind(OR = coef(attack_black_weighted), confint(attack_black_weighted))),4)
+
+
+
+#Race:Hispanic Logistic Regressions
+illegaldrug_hispanic_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_hispanic_weighted, family="binomial")
+summary(illegaldrug_hispanic_weighted)
+round(exp(cbind(OR = coef(illegaldrug_hispanic_weighted), confint(illegaldrug_hispanic_weighted))),4)
+
+steal_hispanic_weighted <- svyglm(medmj_law ~ steal + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_hispanic_weighted, family="binomial")
+summary(steal_hispanic_weighted)
+round(exp(cbind(OR = coef(steal_hispanic_weighted), confint(steal_hispanic_weighted))),4)
+
+attack_hispanic_weighted <- svyglm(medmj_law ~ attack + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_hispanic_weighted, family="binomial")
+summary(attack_hispanic_weighted)
+round(exp(cbind(OR = coef(attack_hispanic_weighted), confint(attack_hispanic_weighted))),4)
+
+
+
+#Race:Other Logistic Regressions
+illegaldrug_other_weighted <- svyglm(medmj_law ~ illegal_crimes + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_other_weighted, family="binomial")
+summary(illegaldrug_other_weighted)
+round(exp(cbind(OR = coef(illegaldrug_other_weighted), confint(illegaldrug_other_weighted))),4)
+
+steal_other_weighted <- svyglm(medmj_law ~ steal + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_other_weighted, family="binomial")
+summary(steal_other_weighted)
+round(exp(cbind(OR = coef(steal_other_weighted), confint(steal_other_weighted))),4)
+
+attack_other_weighted <- svyglm(medmj_law ~ attack + age + sex + marital_status + education + cigarettes + alcohol + mj_use + year, design=crimes_other_weighted, family="binomial")
+summary(attack_other_weighted)
+round(exp(cbind(OR = coef(attack_other_weighted), confint(attack_other_weighted))),4)
+```
+
+
+
+
+
