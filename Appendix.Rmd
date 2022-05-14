@@ -8,7 +8,7 @@ output:
 ---
 
 
-# 2018 Dataset
+### 2018 Dataset
 ```{r}
 load("C:/Irene Hsueh's Documents/MS Applied Biostatistics/More Research/2018 NSDUH Release/NSDUH_2018.RData")
 
@@ -114,7 +114,7 @@ mutate(across(.cols=-weights, .fns=as.factor)) %>%
 
 
 
-# 2019 Dataset
+### 2019 Dataset
 ```{r}
 load("C:/Irene Hsueh's Documents/MS Applied Biostatistics/More Research/2019 NSDUH Release/NSDUH_2019.RData")
 
@@ -841,5 +841,50 @@ round(exp(cbind(OR = coef(attack_other_weighted), confint(attack_other_weighted)
 
 
 
+### Checking Interaction in Weighted 2020 Dataset 
+```{r}
+#Sold Illegal crimes
+illegaldrug_age_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:age, design=crimes2020_weighted, family="binomial")
+summary(illegaldrug_age_2020weighted)
+
+illegaldrug_race_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:race, design=crimes2020_weighted, family="binomial")
+summary(illegaldrug_race_2020weighted)
+
+illegaldrug_education_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:education, design=crimes2020_weighted, family="binomial")
+summary(illegaldrug_education_2020weighted)
+
+illegaldrug_mjuse_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:mj_use, design=crimes2020_weighted, family="binomial")
+summary(illegaldrug_mjuse_2020weighted)
+
+
+
+#Stolen/Tried to Steal Anything Worth >$50
+steal_age_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:age, design=crimes2020_weighted, family="binomial")
+summary(steal_age_2020weighted)
+
+steal_race_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:race, design=crimes2020_weighted, family="binomial")
+summary(steal_race_2020weighted)
+
+steal_education_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:education, design=crimes2020_weighted, family="binomial")
+summary(steal_education_2020weighted)
+
+steal_mjuse_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:mj_use, design=crimes2020_weighted, family="binomial")
+summary(steal_mjuse_2020weighted)
+
+
+
+#Attacked Someone With Intent to Seriously Hurt Them
+attack_age_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:age, design=crimes2020_weighted, family="binomial")
+summary(attack_age_2020weighted)
+
+attack_race_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:race, design=crimes2020_weighted, family="binomial")
+summary(attack_race_2020weighted)
+
+attack_education_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:education, design=crimes2020_weighted, family="binomial")
+summary(attack_education_2020weighted)
+
+attack_mjuse_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:mj_use, design=crimes2020_weighted, family="binomial")
+summary(attack_mjuse_2020weighted)
+```
 
 
