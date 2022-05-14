@@ -136,38 +136,38 @@ crimes2020_weighted <- svydesign(id = ~cluster,
                                  weights = ~weights,
                                  data = crimes2020,
                                  nest = TRUE)
-crimes_nomedmj2020_weighted <- subset(crimes2020_weighted, medmj_law=="No")
-crimes_medmj2020_weighted <- subset(crimes2020_weighted, medmj_law=="Yes")
+crimes2020_nomedmj_weighted <- subset(crimes2020_weighted, medmj_law=="No")
+crimes2020_medmj_weighted <- subset(crimes2020_weighted, medmj_law=="Yes")
 
 
 #Descriptive Statistics
-overall_table2020_weighted <- lapply(names(crimes2020[,-c(13:16)]), function(x)
+overall_table_weighted <- lapply(names(crimes2020[,-c(13:16)]), function(x)
   svytable(bquote(~.(as.name(x))), design=crimes2020_weighted))
 
-overall_prop2020_weighted <- lapply(names(crimes2020[,-c(13:16)]), function(x)
+overall_prop_weighted <- lapply(names(crimes2020[,-c(13:16)]), function(x)
   round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes2020_weighted))*100, 2))
 
 
 #nomedmjlaw_table 
-nomedmj_table2020_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
-  svytable(bquote(~.(as.name(x))), design=crimes_nomedmj2020_weighted))
+nomedmj_table_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes2020_nomedmj_weighted))
 
-nomedmj_prop2020_weighted <- lapply(names(crimes2020[,-c(1, 13:16)]), function(x)
-  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_nomedmj2020_weighted))*100, 2))
+nomedmj_prop_weighted <- lapply(names(crimes2020[,-c(1, 13:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes2020_nomedmj_weighted))*100, 2))
 
 
 #medmjlaw_table 
-medmj_table2020_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
-  svytable(bquote(~.(as.name(x))), design=crimes_medmj2020_weighted))
+medmj_table_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes2020_medmj_weighted))
 
-medmj_prop2020_weighted <- lapply(names(crimes2020[,-c(1, 13:16)]), function(x)
-  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_medmj2020_weighted))*100, 2))
+medmj_prop_weighted <- lapply(names(crimes2020[,-c(1, 13:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes2020_medmj_weighted))*100, 2))
 
 
 #Chi-Squared Tests
-chisq2020_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
+chisq_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
   svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes2020_weighted))
-pvalues2020_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
+pvalues_weighted <- lapply(names(crimes2020[-c(1, 13:16)]), function(x)
   svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes2020_weighted)$p.value)
 ```
 
@@ -200,60 +200,123 @@ round(exp(cbind(OR = coef(attack2020_weighted), confint(attack2020_weighted))),4
 
 
 
-# Checking Interaction in Weighted 2020 Dataset
+# Checking Interaction with Sex in Weighted 2020 Dataset
 ```{r}
-#Sold Illegal crimes
-illegaldrug_age_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:age, design=crimes2020_weighted, family="binomial")
-summary(illegaldrug_age_2020weighted)
+#Sold Illegal Drugs
+illegaldrug_sex_weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:sex, design=crimes2020_weighted, family="binomial")
 
-illegaldrug_sex_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:sex, design=crimes2020_weighted, family="binomial")
-summary(illegaldrug_sex_2020weighted)
-
-illegaldrug_race_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:race, design=crimes2020_weighted, family="binomial")
-summary(illegaldrug_race_2020weighted)
-
-illegaldrug_education_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:education, design=crimes2020_weighted, family="binomial")
-summary(illegaldrug_education_2020weighted)
-
-illegaldrug_mjuse_2020weighted <- svyglm(illegal_crimes ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:mj_use, design=crimes2020_weighted, family="binomial")
-summary(illegaldrug_mjuse_2020weighted)
+summary(illegaldrug_sex_weighted)
+round(exp(cbind(OR = coef(illegaldrug_sex_weighted), confint(illegaldrug_sex_weighted))),4)
 
 
 
 #Stolen/Tried to Steal Anything Worth >$50
-steal_age_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:age, design=crimes2020_weighted, family="binomial")
-summary(steal_age_2020weighted)
+steal_sex_weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:sex, design=crimes2020_weighted, family="binomial")
 
-steal_sex_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:sex, design=crimes2020_weighted, family="binomial")
-summary(steal_sex_2020weighted)
-
-steal_race_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:race, design=crimes2020_weighted, family="binomial")
-summary(steal_race_2020weighted)
-
-steal_education_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:education, design=crimes2020_weighted, family="binomial")
-summary(steal_education_2020weighted)
-
-steal_mjuse_2020weighted <- svyglm(steal ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:mj_use, design=crimes2020_weighted, family="binomial")
-summary(steal_mjuse_2020weighted)
+summary(steal_sex_weighted)
+round(exp(cbind(OR = coef(steal_sex_weighted), confint(steal_sex_weighted))),4)
 
 
 
-#Attacked Someone With Intent to Seriously Hurt Them
-attack_age_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:age, design=crimes2020_weighted, family="binomial")
-summary(attack_age_2020weighted)
+#Important That Friends Share Religious Beliefs 
+attack_sex_weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:sex, design=crimes2020_weighted, family="binomial")
 
-attack_sex_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:sex, design=crimes2020_weighted, family="binomial")
-summary(attack_sex_2020weighted)
-
-attack_race_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:race, design=crimes2020_weighted, family="binomial")
-summary(attack_race_2020weighted)
-
-attack_education_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:education, design=crimes2020_weighted, family="binomial")
-summary(attack_education_2020weighted)
-
-attack_mjuse_2020weighted <- svyglm(attack ~ medmj_law + age + sex + race + marital_status + education + cigarettes + alcohol + mj_use + medmj_law:mj_use, design=crimes2020_weighted, family="binomial")
-summary(attack_mjuse_2020weighted)
+summary(attack_sex_weighted)
+round(exp(cbind(OR = coef(attack_sex_weighted), confint(attack_sex_weighted))),4)
 ```
+
+
+
+
+# Stratifying Weighted 2020 Dataset by Sex
+```{r}
+#Race-Stratified Datasets
+crimes_female_weighted <- subset(crimes2020_weighted, sex=="Female")
+crimes_male_weighted <- subset(crimes2020_weighted, sex=="Male")
+
+
+#Female Descriptive Statistics
+female_table_weighted <- lapply(names(crimes2020[,-c(5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_female_weighted))
+female_prop_weighted <- lapply(names(crimes[,-c(7, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_female_weighted))*100, 2))
+
+nomedmj_female_table_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="No")))
+nomedmj_female_prop_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="No")))*100, 2))
+
+medmj_female_table_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="Yes")))
+medmj_female_prop_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_female_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_female_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_female_weighted))
+pvalues_female_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_female_weighted)$p.value)
+
+
+
+#Male Descriptive Statistics
+male_table_weighted <- lapply(names(crimes2020[,-c(5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=crimes_male_weighted))
+male_prop_weighted <- lapply(names(crimes[,-c(5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=crimes_male_weighted))*100, 2))
+
+nomedmj_male_table_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="No")))
+nomedmj_male_prop_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="No")))*100, 2))
+
+medmj_male_table_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="Yes")))
+medmj_male_prop_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  round(prop.table(svytable(bquote(~.(as.name(x))), design=subset(crimes_male_weighted, medmj_law=="Yes")))*100, 2))
+
+chisq_male_weighted <- lapply(names(crimes2020[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_male_weighted))
+pvalues_male_weighted <- lapply(names(crimes[-c(1, 5, 14:16)]), function(x)
+  svychisq(as.formula(paste("~", x, " + medmj_law")), design = crimes_male_weighted)$p.value)
+```
+
+
+
+# Sex-Stratified Weighted 2020 Dataset Analysis
+```{r}
+#Female Logistic Regressions
+illegaldrug_female_weighted <- svyglm(medmj_law ~ illegal_crimes + age + race + marital_status + education + cigarettes + alcohol + mj_use, design=crimes_female_weighted, family="binomial")
+summary(illegaldrug_female_weighted)
+round(exp(cbind(OR = coef(illegaldrug_female_weighted), confint(illegaldrug_female_weighted))),4)
+
+steal_female_weighted <- svyglm(medmj_law ~ steal + age + race + marital_status + education + cigarettes + alcohol + mj_use, design=crimes_female_weighted, family="binomial")
+summary(steal_female_weighted)
+round(exp(cbind(OR = coef(steal_female_weighted), confint(steal_female_weighted))),4) 
+
+attack_female_weighted <- svyglm(medmj_law ~ attack + age + race + marital_status + education + cigarettes + alcohol + mj_use, design=crimes_female_weighted, family="binomial")
+summary(attack_female_weighted)
+round(exp(cbind(OR = coef(attack_female_weighted), confint(attack_female_weighted))),4)
+
+
+
+#Male Logistic Regressions
+illegaldrug_male_weighted <- svyglm(medmj_law ~ illegal_crimes + age + race + marital_status + education + cigarettes + alcohol + mj_use, design=crimes_male_weighted, family="binomial")
+summary(illegaldrug_male_weighted)
+round(exp(cbind(OR = coef(illegaldrug_male_weighted), confint(illegaldrug_male_weighted))),4)
+
+steal_male_weighted <- svyglm(medmj_law ~ steal + age + race + marital_status + education + cigarettes + alcohol + mj_use, design=crimes_male_weighted, family="binomial")
+summary(steal_male_weighted)
+round(exp(cbind(OR = coef(steal_male_weighted), confint(steal_male_weighted))),4)
+
+attack_male_weighted <- svyglm(medmj_law ~ attack + age + race + marital_status + education + cigarettes + alcohol + mj_use, design=crimes_male_weighted, family="binomial")
+summary(attack_male_weighted)
+round(exp(cbind(OR = coef(attack_male_weighted), confint(attack_male_weighted))),4)
+```
+
+
+
+
+
 
 
 
