@@ -9,4 +9,4 @@ I combined the 2018 and 2019 waves into one dataset and analyzed the 2020 wave s
 First, I ran three weighted adjusted multivariable logistic regressions in the 2018-2019 combined dataset, none of which showed any significant association between MML and self-reported criminal behaviors. Then, I looked for any interaction between the three predictor variables and covariates. Only interaction with race warranted stratification. Surprisingly, only in the 2020 datset but not the 2018-2019 dataset, those who lived in states with MML had higher odds of all three self-reported criminal behaviors.  
 
 I'd like to thank my advisors, Professor Ching-Ti Liu and Professor Yen-Han Lee. 
-Feel free to contact me at irenehsueh49@gmail.com with any questions about my code!
+Feel free to contact me at irenekpark49@gmail.com with any questions about my code!
