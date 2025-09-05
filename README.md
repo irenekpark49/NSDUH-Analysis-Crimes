@@ -1,5 +1,5 @@
 # NSDUH-Analysis-Crimes
-For the research paper, ([["Examining the Association between Medical Marijuana Legalization and Criminal Behaviors: Evidence from a U.S. Representative Sample"]](https://www.tandfonline.com/doi/full/10.1080/10826084.2023.2262022)), published in the _Substance Use & Misuse_ Journal, I used the NSDUH datasets to analyze the association between a participant's self-reported criminal behaviors and whether their state of residence had medical marijuana laws (MML). Datasets can be found at 
+For the research paper, (["Examining the Association between Medical Marijuana Legalization and Criminal Behaviors: Evidence from a U.S. Representative Sample"](https://www.tandfonline.com/doi/full/10.1080/10826084.2023.2262022)), published in the _Substance Use & Misuse_ Journal, I used the NSDUH datasets to analyze the association between a participant's self-reported criminal behaviors and whether their state of residence had medical marijuana laws (MML). Datasets can be found at 
 [2018 Dataset](https://www.datafiles.samhsa.gov/dataset/national-survey-drug-use-and-health-2018-nsduh-2018-ds0001), 
 [2019 Dataset](https://www.datafiles.samhsa.gov/dataset/national-survey-drug-use-and-health-2019-nsduh-2019-ds0001),
 [2020 Dataset](https://www.datafiles.samhsa.gov/dataset/national-survey-drug-use-and-health-2020-nsduh-2020-ds0001).
