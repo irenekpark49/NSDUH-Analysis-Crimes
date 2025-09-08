@@ -211,5 +211,6 @@ steal <- logistic_regression(dataset = crimes_weighted,
 
 # Attacked Someone With Intent to Seriously Hurt Them
 attack <- logistic_regression(dataset = crimes_weighted, 
-                              outcome = "steal")
+                              outcome = "attack")
 ```
+
